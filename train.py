@@ -23,11 +23,11 @@ def train(csv_file):
     for index, item in enumerate(X):
         # Quick hack to space out json elements
         reqJson = json.loads(item, object_pairs_hook=OrderedDict)
-        del reqJson['timestamp']
-        del reqJson['headers']
-        del reqJson['source']
-        del reqJson['route']
-        del reqJson['responsePayload']
+        # del reqJson['timestamp']
+        # del reqJson['headers']
+        # del reqJson['source']
+        # del reqJson['route']
+        # del reqJson['responsePayload']
         X[index] = json.dumps(reqJson, separators=(',', ':'))
 
     tokenizer = Tokenizer(filters='\t\n', char_level=True)
@@ -62,7 +62,7 @@ def train(csv_file):
     model.add(Dense(1, activation='sigmoid'))
     model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
     print(model.summary())
-    model.fit(X_train, Y_train, validation_split=0.25, epochs=3, batch_size=128, callbacks=[tb_callback])
+    model.fit(X_train, Y_train, validation_split=0.25, epochs=15, batch_size=128)
 
     # Evaluate model
     score, acc = model.evaluate(X_test, Y_test, verbose=1, batch_size=128)
@@ -70,9 +70,9 @@ def train(csv_file):
     print("Model Accuracy: {:0.2f}%".format(acc * 100))
 
     # Save model
-    model.save_weights('securitai-lstm-weights.h5')
-    model.save('securitai-lstm-model.h5')
-    with open('securitai-lstm-model.json', 'w') as outfile:
+    model.save_weights('iothomelab-lstm-weights.h5')
+    model.save('iothomelab-lstm-model.h5')
+    with open('iothomelab-lstm-model.json', 'w') as outfile:
         outfile.write(model.to_json())
 
 if __name__ == '__main__':
